@@ -1,35 +1,29 @@
 package tests;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.Assert;
 import org.testng.annotations.*;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import pages.LoginPage;
 
 public class SauceLoginTest {
 
     WebDriver driver;
+    LoginPage loginPage;
 
     @BeforeMethod
     public void setup() {
         driver = new ChromeDriver();
         driver.manage().window().maximize();
         driver.get("https://www.saucedemo.com/");
+        loginPage = new LoginPage(driver);
     }
 
     @Test
     public void testLoginSuccess() {
-        WebElement username = driver.findElement(By.id("user-name"));
-        WebElement password = driver.findElement(By.id("password"));
-        WebElement loginButton = driver.findElement(By.id("login-button"));
-
-        username.sendKeys("standard_user");
-        password.sendKeys("secret_sauce");
-        loginButton.click();
-
+        loginPage.loginAs("standard_user", "secret_sauce");
         String currentUrl = driver.getCurrentUrl();
-        Assert.assertTrue(currentUrl.contains("inventory"));
+        Assert.assertTrue(currentUrl.contains("inventory"), "El login no redirigió correctamente");
     }
 
     @AfterMethod
