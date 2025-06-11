@@ -7,7 +7,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.Assert;
 import org.testng.annotations.*;
 
-public class SauceLoginTest_BACKUP {
+public class SauceLoginTest {
 
     WebDriver driver;
 
