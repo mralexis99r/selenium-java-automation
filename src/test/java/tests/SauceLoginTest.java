@@ -1,13 +1,16 @@
 package tests;
 
-import org.testng.Assert;
-import org.testng.annotations.*;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.annotations.*;
+import org.testng.Assert;
+
 import pages.LoginPage;
+import utils.JsonReader;
+
+import java.io.InputStream;
 
 public class SauceLoginTest {
-
     WebDriver driver;
     LoginPage loginPage;
 
@@ -19,9 +22,15 @@ public class SauceLoginTest {
         loginPage = new LoginPage(driver);
     }
 
-    @Test
-    public void testLoginSuccess() {
-        loginPage.loginAs("standard_user", "secret_sauce");
+    @DataProvider(name = "loginData")
+    public Object[][] loginDataProvider() {
+        InputStream inputStream = getClass().getClassLoader().getResourceAsStream("LoginData.json");
+        return JsonReader.getLoginData(inputStream);
+    }
+
+    @Test(dataProvider = "loginData")
+    public void testLogin(String username, String password) {
+        loginPage.loginAs(username, password);
         String currentUrl = driver.getCurrentUrl();
         Assert.assertTrue(currentUrl.contains("inventory"), "El login no redirigió correctamente");
     }
